@@ -1,0 +1,27 @@
+{
+  "name": "next-op",
+  "version": "1.0.0",
+  "description": "A Brand New Operation System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "babel-node ./prepare.js",
+    "start": "NODE_ENV=production babel-node ./prepare.js",
+    "build": "next build"
+  },
+  "author": "Jerry",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "koa": "^2.0.0",
+    "koa-route": "^2.4.2",
+    "koa-router": "^7.1.0",
+    "next": "^2.0.0-beta.15"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-node5": "^12.0.0",
+    "babel-preset-stage-0": "^6.16.0"
+  }
+}
