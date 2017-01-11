@@ -1,4 +1,3 @@
-import Page from '../components/Page'
 import Link from 'next/link'
 import { Component, PropTypes } from 'react'
 import { Button } from 'antd'
@@ -17,11 +16,11 @@ export default class Index extends Component {
 
   render () {
     return (
-      <Page>
+      <div>
         <h1>主页</h1>
         <Link href='/about'><a>Hello World - {this.props.name.name}</a></Link>
         <Button>GOOD</Button>
-      </Page>
+      </div>
     )
   }
 }
