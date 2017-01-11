@@ -1,6 +1,6 @@
 import Router from 'koa-router'
 
-const router = new Router
+const router = new Router()
 
 router.get('/', async function (ctx) {
   ctx.body = '{"name": "Tomy"}'

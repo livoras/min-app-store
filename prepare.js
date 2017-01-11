@@ -1,9 +1,7 @@
 import Koa from 'koa'
 import next from 'next'
 import Router from 'koa-router'
-import apiRouter from './server/routes'
 import fs from 'fs'
-import http from 'http'
 import 'isomorphic-fetch'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -11,7 +9,7 @@ const app = next({ dev, dir: '.' })
 let backendApiCallback = getBackendApiCallback()
 console.log('Running in', dev ? 'dev' : 'production', 'mode')
 
-function startServer() {
+function startServer () {
   app.start(3000).then(() => {
     app.oldRun = app.run
     app.run = (req, res) => {
@@ -26,8 +24,8 @@ function startServer() {
 }
 
 function getBackendApiCallback () {
-  const koaApp = new Koa
-  const router = new Router
+  const koaApp = new Koa()
+  const router = new Router()
   Object.keys(require.cache).forEach((key) => {
     delete require.cache[key]
   })
