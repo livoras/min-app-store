@@ -2,6 +2,8 @@ import Koa from 'koa'
 import next from 'next'
 import Router from 'koa-router'
 import fs from 'fs'
+import bodyParser from 'koa-bodyparser'
+import logger from 'koa-logger'
 import 'isomorphic-fetch'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -17,7 +19,9 @@ function startServer () {
         ? app.oldRun(req, res)
         : serveBackendApi(req, res)
     }
-    watchFilesAndResetBackendApiCallback()
+    if (dev) {
+      watchFilesAndResetBackendApiCallback()
+    }
   }).catch((e) => {
     console.log(e.stack)
   })
@@ -31,6 +35,8 @@ function getBackendApiCallback () {
   })
   const apiRouter = require('./routes/').default
   router.use('/api', apiRouter.routes())
+  koaApp.use(logger())
+  koaApp.use(bodyParser())
   koaApp.use(router.routes())
   return koaApp.callback()
 }
@@ -47,7 +53,7 @@ function serveBackendApi (req, res) {
 }
 
 function watchFilesAndResetBackendApiCallback () {
-  fs.watch('.', { recursive: true }, (event, filename) => {
+  fs.watch('./server/', { recursive: true }, (event, filename) => {
     backendApiCallback = getBackendApiCallback()
     console.log(`${filename} ${event}, restarting routes.`)
   })
