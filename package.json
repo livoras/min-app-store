@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "babel-node ./prepare.js",
-    "start": "NODE_ENV=production babel-node ./prepare.js",
-    "build": "next build"
+    "dev": "babel-node ./server/index.js",
+    "start": "NODE_ENV=production node ./index.js",
+    "build": "rm -rf build && next build && babel ./server/ --out-dir build && mv .next ./build && cp -a static ./build/ && cp package.json ./build/"
   },
   "author": "Jerry",
   "license": "MIT",
