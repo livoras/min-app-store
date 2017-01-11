@@ -17,6 +17,7 @@ export default class extends Component {
           <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
           <title>鹿战终极管理系统</title>
         </Head>
+        <link rel='stylesheet' type='text/css' href='/static/styles/antd.min.css' />
         <div>{this.props.children}</div>
       </div>
     )
