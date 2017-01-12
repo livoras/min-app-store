@@ -8,7 +8,8 @@ export default class Crud {
       'create',
       'read',
       'update',
-      'delete'
+      'delete',
+      'list'
     ]
   }
 
@@ -26,7 +27,7 @@ export default class Crud {
   wrap (before, after, fn) {
     return async (ctx) => {
       if (before) await before(ctx, this.Model)
-      let ret = await fn(ctx)
+      let ret = fn(ctx)
       if (after) ret = await after(ctx, ret, this.Model)
       return ret
     }
@@ -40,7 +41,7 @@ export default class Crud {
   }
 
   read (before, after) {
-    this.router.get('/:id', this.wrap(before, after, async (ctx) => {
+    this.router.get('/:id', this.wrap(before, after, (ctx) => {
       return this.Model.findOne({ _id: ctx.params.id })
     }))
   }
@@ -60,6 +61,18 @@ export default class Crud {
       return ret.result.n === 0
         ? Promise.reject({ status: 404, message: '未能找到相应的数据' })
         : Promise.resolve(true)
+    }))
+  }
+
+  list (before, after) {
+    this.router.get('/', this.wrap(before, after, (ctx) => {
+      let { offset, limit } = ctx.request.query
+      offset = offset * 1 || 0
+      limit = limit * 1 || 10
+      return this.Model
+        .find({})
+        .skip(offset)
+        .limit(limit)
     }))
   }
 }

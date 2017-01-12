@@ -11,15 +11,14 @@ const router = new Router()
  * Create CRUD routes for application model
  */
 const crud = new Crud(router, Application)
-crud.except('read')
+crud.except('read', 'list')
 
-/**
- * Custom read
- */
-router.get('/:id', async (ctx) => {
-  return await Application
-    .findOne({ _id: ctx.params.id })
-    .populate('category')
+crud.list(null, (ctx, query) => {
+  return query.populate('category')
+})
+
+crud.read(null, (ctx, query) => {
+  return query.populate('category')
 })
 
 /**
