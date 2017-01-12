@@ -51,7 +51,7 @@ export default class Crud {
       const data = await this.Model.findOne({ _id: ctx.params.id })
       Object.assign(data, ctx.request.body)
       await data.save()
-      return true
+      return data
     }))
   }
 
