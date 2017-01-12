@@ -1,20 +1,14 @@
 import Router from 'koa-router'
 
 export default class CustomRouter extends Router {
-  get (path, fn) {
-    super.get(path, this.wrap(fn))
-  }
-
-  post (path, fn) {
-    super.post(path, this.wrap(fn))
-  }
-
-  put (path, fn) {
-    super.put(path, this.wrap(fn))
-  }
-
-  delete (path, fn) {
-    super.delete(path, this.wrap(fn))
+  constructor () {
+    super()
+    const methods = ['get', 'post', 'put', 'delete']
+    methods.forEach((method) => {
+      this[method] = (path, fn) => {
+        super[method](path, this.wrap(fn))
+      }
+    })
   }
 
   wrap (fn) {

@@ -1,9 +1,9 @@
-import testRouter from './test'
-import applicationRouter from './applications'
+import applicationsRouter from './applications'
+import categoriesRouter from './categories'
 import Router from 'koa-router'
 
 const router = new Router()
-router.use('/test', testRouter.routes())
-router.use('/applications', applicationRouter.routes())
+router.use('/applications', applicationsRouter.routes())
+router.use('/categories', categoriesRouter.routes())
 
 export default router

@@ -1,42 +1,25 @@
 import Joi from 'joi'
 import Router from '../../utils/router'
 import validate from '../../utils/validate'
-import {
-  createApplication,
-  deleteApplication,
-  updateApplication,
-  getApplication,
-  voteOnApplication
-} from '../../services/application'
+import { voteOnApplication } from '../../services/application'
+import Crud from '../../utils/crud'
+import Application from '../../models/application'
 
 const router = new Router()
 
 /**
- * Create application
+ * Create CRUD routes for application model
  */
-router.post('/', async (ctx) => {
-  return await createApplication(ctx.request.body)
-})
+const crud = new Crud(router, Application)
+crud.except('read')
 
 /**
- * Delete application
+ * Custom read
  */
-router.delete('/:applicationId', async (ctx) => {
-  return await deleteApplication(ctx.params.applicationId)
-})
-
-/**
- * Update application
- */
-router.put('/:applicationId', async (ctx) => {
-  return await updateApplication(ctx.params.applicationId, ctx.request.body)
-})
-
-/**
- * Load application
- */
-router.get('/:applicationId', async (ctx) => {
-  return await getApplication(ctx.params.applicationId)
+router.get('/:id', async (ctx) => {
+  return await Application
+    .findOne({ _id: ctx.params.id })
+    .populate('category')
 })
 
 /**

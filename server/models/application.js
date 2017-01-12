@@ -1,21 +1,21 @@
 import mongoose from '../stores/mongoose'
 import { Schema } from 'mongoose'
 
-const applicationSchema = new mongoose.Schema({
+const applicationSchema = new Schema({
   name: {
     type: String,
     required: true,
-    min: 2,
-    max: 16
+    minlength: 2,
+    maxlength: 16
   },
-  categoryId: Schema.Types.ObjectId,
+  category: { type: Schema.Types.ObjectId, ref: 'Category' },
   totalVote: { type: Number, default: 0 },
   voteCount: { type: Number, default: 0 },
   developerName: {
     type: String,
     required: true,
-    min: 2,
-    max: 16
+    minlength: 2,
+    maxlength: 16
   },
   description: {
     type: String,
