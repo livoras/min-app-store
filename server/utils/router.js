@@ -31,11 +31,11 @@ export default class CustomRouter extends Router {
           ctx.status = 401
           ctx.body = {
             error: '参数验证错误',
-            message: e.message
+            message: e.errors || e.message
           }
         } else {
           // More error handling
-          ctx.status = 500
+          ctx.status = e.status || 500
           ctx.body = {
             error: '服务器未知异常',
             message: e.message || e

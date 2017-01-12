@@ -1,0 +1,46 @@
+import mongoose from '../stores/mongoose'
+import { Schema } from 'mongoose'
+
+const applicationSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    min: 2,
+    max: 16
+  },
+  categoryId: Schema.Types.ObjectId,
+  totalVote: { type: Number, default: 0 },
+  voteCount: { type: Number, default: 0 },
+  developerName: {
+    type: String,
+    required: true,
+    min: 2,
+    max: 16
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  versions: [{
+    version: {
+      type: String,
+      required: true
+    },
+    changelog: {
+      type: String,
+      required: true
+    },
+    publishDate: Date
+  }],
+  screenshots: [String],
+  qrcode: {
+    type: String,
+    required: true
+  }
+}, {
+  versionKey: false
+})
+
+const Application = mongoose.model('Application', applicationSchema)
+
+export default Application
