@@ -6,7 +6,11 @@ import { getApplicationsByCategoryId } from '../../services/application'
 const router = new Router()
 
 const crud = new Crud(router, Category)
-crud.all()
+crud.except('list')
+
+crud.list(null, (ctx, query) => {
+  return query.sort('-_id')
+})
 
 /**
  * 通过分类获取该分类下的应用程序

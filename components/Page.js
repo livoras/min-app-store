@@ -1,24 +1,67 @@
-import Head from 'next/head'
+import Link from 'next/link'
 import { Component, PropTypes } from 'react'
+import { Layout, Menu } from 'antd'
 
-export default class extends Component {
+const { Header, Content, Sider } = Layout
+const SubMenu = Menu.SubMenu
+
+export default class Index extends Component {
   static propTypes = {
-    children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
+    title: PropTypes.string,
+    children: PropTypes.any
   }
 
   render () {
     return (
       <div>
-        <Head>
-          <meta charSet='utf-8' />
-          <meta httpEquiv='X-UA-Compatible' content='IE=edge,chrome=1' />
-          <meta name='renderer' content='webkit' />
-          <meta httpEquiv='Cache-Control' content='no-siteapp' />
-          <meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' />
-          <title>鹿战终极管理系统</title>
-        </Head>
-        <link rel='stylesheet' type='text/css' href='/static/styles/antd.min.css' />
-        <div>{this.props.children}</div>
+        <Header style={{ padding: 0 }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            height: '100%',
+            marginLeft: 50,
+            width: 200,
+            float: 'left',
+            textAlign: 'center',
+            fontSize: 16,
+            color: '#108ee9'
+          }}>
+            <img src='/static/images/logo.svg' style={{
+              width: 35,
+              lineHeight: 64,
+              marginRight: 10
+            }} />小程序应用商店
+          </div>
+          <Menu mode='horizontal' style={{ lineHeight: '64px' }}>
+            <Menu.Item key='home'>
+              <Link href='/'><a>首页</a></Link>
+            </Menu.Item>
+            <SubMenu title='管理'>
+              <Menu.Item><Link href='/management/categories'><a>分类管理</a></Link></Menu.Item>
+              <Menu.Item><Link href='/management/applications'><a>应用程序上传</a></Link></Menu.Item>
+            </SubMenu>
+          </Menu>
+        </Header>
+        <div style={{
+          width: '100%',
+          maxWidth: 960,
+          backgroundColor: '#FFFFFF',
+          margin: '0 auto',
+          minHeight: 600,
+          marginTop: 20
+        }}>
+          {this.props.title
+            ? <div style={{
+              lineHeight: '40px',
+              height: '40px',
+              width: '100%',
+              padding: '0 15px',
+              borderBottom: '1px solid #ededed'
+            }}>{this.props.title}</div>
+            : null
+          }
+          <div style={{ padding: '0 15px' }}>{this.props.children}</div>
+        </div>
       </div>
     )
   }
