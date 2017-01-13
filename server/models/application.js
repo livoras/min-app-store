@@ -2,6 +2,10 @@ import mongoose from '../stores/mongoose'
 import { Schema } from 'mongoose'
 
 const applicationSchema = new Schema({
+  icon: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true,
