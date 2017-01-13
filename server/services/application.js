@@ -10,3 +10,15 @@ export const voteOnApplication = async (applicationId, vote) => {
     voteCount: application.voteCount
   }
 }
+
+export const getApplicationsByCategoryId = (categoryId, offsetArg, limitArg) => {
+  const offset = offsetArg * 1 || 0
+  const limit = limitArg * 1 || 10
+  return Application
+    .find({ category: categoryId })
+    .select({
+      versions: { $slice: -1 }
+    })
+    .skip(offset)
+    .limit(limit)
+}
