@@ -1,6 +1,7 @@
 import Router from '../../utils/router'
 import Crud from '../../utils/crud'
 import Collection from '../../models/collection'
+import { getCollectionsByCategoryId } from '../../services/collection'
 
 const router = new Router()
 
@@ -14,6 +15,9 @@ crud.read(null, (ctx, query) => {
 })
 
 // Get collections by category
-// TODO
+router.get('/', async (ctx) => {
+  const { categoryId } = ctx.request.query
+  return await getCollectionsByCategoryId(categoryId || null)
+})
 
 export default router
