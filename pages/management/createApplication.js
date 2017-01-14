@@ -42,7 +42,7 @@ export default class Index extends Component {
           : []
       }
     } else {
-      this.state = { versions: [] }
+      this.state = { versions: [], screenshots: [] }
     }
   }
 
