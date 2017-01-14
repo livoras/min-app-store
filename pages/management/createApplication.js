@@ -39,8 +39,7 @@ export default class Index extends Component {
             version.publishDate = moment(version.publishDate).format('YYYY-MM-DD HH:mm')
             return version
           })
-          : [],
-        screenshotsUrls: application.screenshots.join('\n')
+          : []
       }
     } else {
       this.state = { versions: [] }
@@ -100,11 +99,22 @@ export default class Index extends Component {
     })
   }
 
+  handleDeleteScreenshot (index) {
+    this.state.screenshots.splice(index, 1)
+    this.setState({
+      screenshots: this.state.screenshots
+    })
+  }
+
+  handleNewScreenshot (data) {
+    if (!data.file.response) return
+    const screenshots = this.state.screenshots || []
+    screenshots.push(data.file.response.data)
+    this.setState({ screenshots })
+  }
+
   async handleCreateApplication () {
     const toSendData = {...this.state}
-    if (toSendData.screenshotsUrls) {
-      toSendData.screenshots = toSendData.screenshotsUrls.split('\n')
-    }
     delete toSendData.screenshotsUrls
     toSendData.versions.forEach((version) => {
       if (!version.publishDate) {
@@ -170,7 +180,50 @@ export default class Index extends Component {
             <Input {...this.bindToState('description')} type='textarea' rows={4} />
           </FormItem>
           <FormItem {...formItemLayout} label='应用截图'>
-            <Input {...this.bindToState('screenshotsUrls')} type='textarea' rows={4} placeholder='换行隔开' />
+            {this.state.screenshots.map((screenshotUrl, i) => {
+              return (
+                <div key={screenshotUrl} style={{
+                  width: '100px',
+                  height: '100px',
+                  float: 'left',
+                  marginRight: '10px',
+                  marginBottom: '10px',
+                  position: 'relative'
+                }}>
+                  <Icon
+                    style={{
+                      position: 'absolute',
+                      top: -5,
+                      fontSize: 15,
+                      right: -7,
+                      color: '#F04134',
+                      cursor: 'pointer',
+                      zIndex: 1
+                    }}
+                    onClick={this.handleDeleteScreenshot.bind(this, i)}
+                    type='cross-circle' />
+                  <img src={screenshotUrl} style={{ width: '100%', height: '100%' }} />
+                </div>
+              )
+            })}
+            <Upload
+              className='avatar-uploader'
+              showUploadList={false}
+              action='/api/common/upload'
+              onChange={::this.handleNewScreenshot}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                borderRadius: '3px',
+                cursor: 'pointer',
+                justifyContent: 'center',
+                width: '100px',
+                height: '100px',
+                border: '1px dashed #cccccc'
+              }}>
+                <Icon type='plus' className='avatar-uploader-trigger' />
+              </div>
+            </Upload>
           </FormItem>
           <FormItem {...formItemLayout} label='二维码'>
             <Upload
