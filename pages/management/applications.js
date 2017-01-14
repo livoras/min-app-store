@@ -18,7 +18,7 @@ export default class Index extends Component {
     return (
       <Page title='小程序管理'>
         <Button type='primary' style={{ margin: '10px' }}>
-          <Link href='/'><a>小程序录入</a></Link>
+          <Link href='/management/createApplication'><a>小程序录入</a></Link>
         </Button>
         <ul>
           {this.props.applications.map((application) => {

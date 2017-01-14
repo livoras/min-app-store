@@ -14,7 +14,9 @@ const crud = new Crud(router, Application)
 crud.except('read', 'list')
 
 crud.list(null, (ctx, query) => {
-  return query.populate('category')
+  return query
+    .populate('category')
+    .sort('-_id')
 })
 
 crud.read(null, (ctx, query) => {

@@ -38,7 +38,7 @@ export default class Index extends Component {
             </Menu.Item>
             <SubMenu title='管理'>
               <Menu.Item><Link href='/management/categories'><a>分类管理</a></Link></Menu.Item>
-              <Menu.Item><Link href='/management/applications'><a>小程序录入</a></Link></Menu.Item>
+              <Menu.Item><Link href='/management/applications'><a>小程序管理</a></Link></Menu.Item>
             </SubMenu>
           </Menu>
         </Header>
@@ -60,7 +60,7 @@ export default class Index extends Component {
             }}>{this.props.title}</div>
             : null
           }
-          <div style={{ padding: '0 15px' }}>{this.props.children}</div>
+          <div style={{ padding: '0 15px 15px 15px' }}>{this.props.children}</div>
         </div>
       </div>
     )

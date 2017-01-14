@@ -2,7 +2,7 @@ import Koa from 'koa'
 import next from 'next'
 import Router from 'koa-router'
 import fs from 'fs'
-import bodyParser from 'koa-bodyparser'
+import bodyParser from 'koa-body'
 import logger from 'koa-logger'
 import 'isomorphic-fetch'
 
@@ -36,7 +36,7 @@ function getBackendApiCallback () {
   const apiRouter = require('./routes/').default
   router.use('/api', apiRouter.routes())
   koaApp.use(logger())
-  koaApp.use(bodyParser())
+  koaApp.use(bodyParser({ multipart: true }))
   koaApp.use(router.routes())
   return koaApp.callback()
 }

@@ -22,10 +22,10 @@ export default class CustomRouter extends Router {
         }
       } catch (e) {
         if (e.name === 'ValidationError') {
-          ctx.status = 401
+          ctx.status = 400
           ctx.body = {
-            error: '参数验证错误',
-            message: e.errors || e.message
+            message: '参数验证错误',
+            errors: e.errors || e.message
           }
         } else {
           // More error handling
