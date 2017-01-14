@@ -49,7 +49,7 @@ export default class Index extends Component {
                       }} />
                   </div>
                   <div>
-                    <Link href={`/management/applications/edit?applicationId=${application._id}`}>
+                    <Link href={`/management/createApplication?applicationId=${application._id}`}>
                       <a>{application.name}</a>
                     </Link>
                   </div>

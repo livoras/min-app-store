@@ -34,7 +34,10 @@ const applicationSchema = new Schema({
       type: String,
       required: true
     },
-    publishDate: Date
+    publishDate: {
+      type: Date,
+      default: new Date()
+    }
   }],
   screenshots: [String],
   qrcode: {

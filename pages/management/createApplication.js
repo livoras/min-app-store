@@ -3,6 +3,7 @@ import { Component, PropTypes } from 'react'
 import Page from '../../components/Page'
 import apiClient from '../../common/apiClient'
 import { Form, Input, Button, Icon, Select, Upload } from 'antd'
+import moment from 'moment'
 
 const FormItem = Form.Item
 const Option = Select.Option
@@ -14,19 +15,35 @@ const formItemLayout = {
 
 export default class Index extends Component {
   static propTypes = {
-    categories: PropTypes.array
+    categories: PropTypes.array,
+    application: PropTypes.object
   }
 
-  static async getInitialProps () {
+  static async getInitialProps ({ req, res, query }) {
     return {
-      categories: await apiClient.get('/categories')
+      categories: await apiClient.get('/categories'),
+      application: query.applicationId
+        ? await apiClient.get(`/applications/${query.applicationId}`)
+        : null
     }
   }
 
-  constructor () {
-    super()
-    this.state = {
-      versions: []
+  componentWillMount () {
+    if (this.props.application) {
+      const { application } = this.props
+      this.state = {
+        ...application,
+        category: application.category ? application.category._id : '',
+        versions: application.versions
+          ? application.versions.map((version) => {
+            version.publishDate = moment(version.publishDate).format('YYYY-MM-DD HH:mm')
+            return version
+          })
+          : [],
+        screenshotsUrls: application.screenshots.join('\n')
+      }
+    } else {
+      this.state = { versions: [] }
     }
   }
 
@@ -77,15 +94,31 @@ export default class Index extends Component {
     })
   }
 
+  handleCategoryChange (value) {
+    this.setState({
+      category: value
+    })
+  }
+
   async handleCreateApplication () {
     const toSendData = {...this.state}
     if (toSendData.screenshotsUrls) {
       toSendData.screenshots = toSendData.screenshotsUrls.split('\n')
     }
     delete toSendData.screenshotsUrls
+    toSendData.versions.forEach((version) => {
+      if (!version.publishDate) {
+        version.publishDate = new Date()
+      }
+    })
     try {
-      await apiClient.post('/applications', toSendData)
-      alert('创建成功！')
+      if (this.state._id) {
+        await apiClient.put(`/applications/${this.state._id}`, toSendData)
+        alert('保存成功！')
+      } else {
+        await apiClient.post('/applications', toSendData)
+        alert('创建成功！')
+      }
       window.location.reload()
     } catch (e) {
       alert(e)
@@ -99,8 +132,8 @@ export default class Index extends Component {
           <FormItem {...formItemLayout} label='应用程序名字'>
             <Input {...this.bindToState('name')} />
           </FormItem>
-          <FormItem {...formItemLayout} label='应用程序名字'>
-            <Select>
+          <FormItem {...formItemLayout} label='应用程序分类'>
+            <Select onChange={::this.handleCategoryChange} value={this.state.category}>
               {this.props.categories.map((category) => {
                 return <Option key={category._id} value={category._id}>{category.name}</Option>
               })}
@@ -186,7 +219,11 @@ export default class Index extends Component {
                     }}
                     type='cross-circle' />
                   <Input placeholder='版本号' {...this.bindToState(`versions[${i}].version`)} style={{ marginBottom: 10 }} />
-                  <Input type='date' placeholder='版本号' {...this.bindToState(`versions[${i}].publishDate`)} style={{ marginBottom: 10 }} />
+                  <Input
+                    type='input'
+                    placeholder='发布日期'
+                    {...this.bindToState(`versions[${i}].publishDate`)}
+                    style={{ marginBottom: 10 }} />
                   <Input placeholder='版本变更信息' {...this.bindToState(`versions[${i}].changelog`)} type='textarea' rows={4} />
                 </div>
               )
@@ -194,7 +231,9 @@ export default class Index extends Component {
             <Button type='normal' size='small' onClick={::this.handleAddNewVersion}>新增</Button>
           </FormItem>
           <FormItem wrapperCol={{ span: 16, offset: 6 }}>
-            <Button type='primary' htmlType='submit' size='large' onClick={::this.handleCreateApplication}>创建</Button>
+            <Button type='primary' htmlType='submit' size='large' onClick={::this.handleCreateApplication}>
+              {this.state._id ? '保存' : '创建'}
+            </Button>
           </FormItem>
         </Form>
       </Page>
