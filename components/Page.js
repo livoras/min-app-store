@@ -8,7 +8,8 @@ const SubMenu = Menu.SubMenu
 export default class Index extends Component {
   static propTypes = {
     title: PropTypes.string,
-    children: PropTypes.any
+    children: PropTypes.any,
+    wrapperStyle: PropTypes.object
   }
 
   render () {
@@ -42,14 +43,15 @@ export default class Index extends Component {
             </SubMenu>
           </Menu>
         </Header>
-        <div style={{
+        <div style={Object.assign({
           width: '100%',
           maxWidth: 960,
           backgroundColor: '#FFFFFF',
           margin: '0 auto',
+          padding: '0 15px 15px 15px',
           minHeight: 600,
           marginTop: 20
-        }}>
+        }, this.props.wrapperStyle || {})}>
           {this.props.title
             ? <div style={{
               lineHeight: '40px',
@@ -60,8 +62,16 @@ export default class Index extends Component {
             }}>{this.props.title}</div>
             : null
           }
-          <div style={{ padding: '0 15px 15px 15px' }}>{this.props.children}</div>
+          {this.props.children}
         </div>
+        <div style={{
+          width: '100%',
+          height: '150px',
+          marginTop: '15px',
+          backgroundColor: '#FFFFFF'
+        }}>
+          OK
+          </div>
       </div>
     )
   }
