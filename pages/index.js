@@ -76,18 +76,19 @@ export default class Index extends Component {
             </div>
             <div>
               {this.props.applications.map((application) => {
-                const iconSize = 40
+                const iconSize = 35
                 return (
                   <div key={application._id} style={{
                     display: 'flex',
-                    paddingBottom: '20px'
+                    paddingBottom: '15px'
                   }}>
                     <img
                       src={application.icon}
                       width={iconSize}
                       height={iconSize}
                       style={{
-                        borderRadius: '3px'
+                        borderRadius: '3px',
+                        margin: '2px'
                       }} />
                     <div style={{ padding: '0 0 0 5px', display: 'flex', flexDirection: 'column' }}>
                       <span style={{
