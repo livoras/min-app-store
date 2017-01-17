@@ -1,5 +1,6 @@
 import { Component, PropTypes } from 'react'
 import Page from '../components/Page'
+import Link from 'next/link'
 import { Icon, Carousel } from 'antd'
 import apiClient from '../common/apiClient'
 import moment from 'moment'
@@ -8,19 +9,35 @@ export default class Index extends Component {
   static propTypes = {
     categories: PropTypes.array,
     applications: PropTypes.array,
-    collections: PropTypes.array
+    collections: PropTypes.array,
+    isOfCategory: PropTypes.bool
   }
 
-  static async getInitialProps () {
+  static async getInitialProps ({ query }) {
+    const isOfCategory = !!query.category
+    let collectionsOfCategory
+    if (isOfCategory) {
+      let category = await apiClient.get(`/categories/${query.category}`)
+      collectionsOfCategory = await apiClient.get(`/collections?categoryId=${query.category}`)
+      if (collectionsOfCategory.length === 0) {
+        const applications = await apiClient.get(`/categories/${query.category}/applications`)
+        collectionsOfCategory = [{
+          _id: 'randomeKey',
+          name: category.name,
+          applications
+        }]
+      }
+    }
     const rets = await Promise.all([
       apiClient.get('/categories'),
       apiClient.get('/applications?offset=0&limit=20'),
-      apiClient.get('/collections')
+      collectionsOfCategory || apiClient.get('/collections')
     ])
     return {
       categories: rets[0],
       applications: rets[1],
-      collections: rets[2]
+      collections: rets[2],
+      isOfCategory
     }
   }
 
@@ -41,6 +58,18 @@ export default class Index extends Component {
       return groups
     }, [])
     return rets
+  }
+
+  renderCategory (category) {
+    return (
+      <div key={category._id} >
+        <Link href={`/?category=${category._id}`}>
+          <a style={{ color: '#707070' }}>
+            {category.name}
+          </a>
+        </Link>
+      </div>
+    )
   }
 
   render () {
@@ -78,24 +107,10 @@ export default class Index extends Component {
               fontSize: '13px'
             }}>
               <div style={{ flex: 1 }}>
-                {eventCates.map((category) => {
-                  return (
-                    <div key={category._id}>
-                      <a style={{ color: '#707070' }}>
-                        {category.name}
-                      </a>
-                    </div>
-                  )
-                })}
+                {eventCates.map((category) => this.renderCategory(category))}
               </div>
               <div style={{ flex: 1 }}>
-                {oddCates.map((category) => {
-                  return (
-                    <div key={category._id}>
-                      <a style={{ color: '#707070' }}>{category.name}</a>
-                    </div>
-                  )
-                })}
+                {oddCates.map((category) => this.renderCategory(category))}
               </div>
             </div>
             <div style={{ marginTop: '20px', fontSize: '14px', marginBottom: '20px' }}>
@@ -139,22 +154,25 @@ export default class Index extends Component {
             </div>
           </div>
           <div style={{ flex: 1, overflow: 'hidden', padding: '15px 0 0 15px' }}>
-            <div style={{ marginBottom: '10px' }}>
-              <Carousel autoplay>
-                {sliders.map((slide) => {
-                  return (
-                    <div
-                      key={Math.random()}
-                      style={{
-                        height: '220px',
-                        overflow: 'hidden',
-                        backgroundImage: `url(${slide})`,
-                        backgroundSize: 'cover'
-                      }} />
-                  )
-                })}
-              </Carousel>
-            </div>
+            {!this.props.isOfCategory
+              ? <div style={{ marginBottom: '10px', display: this.props.isOfCategory ? 'none' : 'block' }}>
+                <Carousel autoplay>
+                  {sliders.map((slide) => {
+                    return (
+                      <div
+                        key={Math.random()}
+                        style={{
+                          height: '220px',
+                          overflow: 'hidden',
+                          backgroundImage: `url(${slide})`,
+                          backgroundSize: 'cover'
+                        }} />
+                    )
+                  })}
+                </Carousel>
+              </div>
+              : null
+            }
             {this.props.collections.map((collection) => (
               <div key={collection._id} style={{
                 border: '1px solid #e9e9e9',
@@ -167,6 +185,15 @@ export default class Index extends Component {
                   backgroundColor: '#F9F9F9'
                 }}>{collection.name}</div>
                 <div style={{ padding: '10px' }}>
+                  {collection.applications.length === 0
+                    ? <div style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100px'
+                    }}>暂无数据</div>
+                    : null
+                  }
                   {this._sixInGroup(collection.applications).map((group, i) => {
                     return (
                       <div key={i} style={{ display: 'flex' }}>

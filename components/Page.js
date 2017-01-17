@@ -69,9 +69,7 @@ export default class Index extends Component {
           height: '150px',
           marginTop: '15px',
           backgroundColor: '#FFFFFF'
-        }}>
-          OK
-          </div>
+        }}></div>
       </div>
     )
   }
