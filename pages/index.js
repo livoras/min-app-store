@@ -203,25 +203,35 @@ export default class Index extends Component {
                               ? <div style={{
                                 flex: 1,
                                 display: 'flex',
-                                height: '120px',
+                                height: '135px',
                                 flexDirection: 'column',
                                 justifyContent: 'center',
                                 alignItems: 'center'
                               }} key={i}>
-                                <img
-                                  src={application.icon}
-                                  width={72}
-                                  height={72}
-                                  style={{
-                                    margin: '0 auto',
-                                    borderRadius: '5px',
-                                    marginBottom: '5px'
-                                  }} />
-                                <div style={{ width: '72px', color: '#000000' }}> {application.name} </div>
-                                <div style={{
-                                  width: '72px',
-                                  fontWeight: 'lighter'
-                                }}> {application.category ? application.category.name : null} </div>
+                                <Link href={`/application?applicationId=${application._id}`}>
+                                  <img
+                                    src={application.icon}
+                                    width={72}
+                                    height={72}
+                                    style={{
+                                      margin: '0 auto',
+                                      borderRadius: '5px',
+                                      marginBottom: '5px'
+                                    }} />
+                                </Link>
+                                <Link href={`/application?applicationId=${application._id}`}>
+                                  <a style={{ display: 'block', width: '72px', color: '#000000' }}>
+                                    {application.name}
+                                  </a>
+                                </Link>
+                                {application.category._id
+                                  ? <Link href={`/?category=${application.category._id}`}>
+                                    <a style={{ width: '72px', fontWeight: 'lighter', color: '#707070' }}>
+                                      {application.category.name}
+                                    </a>
+                                  </Link>
+                                  : null
+                                }
                               </div>
                               : <div key={i} style={{ flex: 1 }} />
                           )
