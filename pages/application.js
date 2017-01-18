@@ -4,6 +4,7 @@ import apiClient from '../common/apiClient'
 import moment from 'moment'
 import Block from '../components/Block'
 import { FONT_FAMILY } from '../common/constants'
+import { BACKEND_URL } from '../config'
 
 class Pre extends Component {
   static propTypes = {
@@ -22,14 +23,31 @@ class Pre extends Component {
     )
   }
 }
-export default class Index extends Component {
+export default class Application extends Component {
   static propTypes = {
-    application: PropTypes.object
+    application: PropTypes.object,
+    pageUrl: PropTypes.string
   }
 
   static async getInitialProps ({ query }) {
     const application = await apiClient.get(`/applications/${query.applicationId}`)
     return { application }
+  }
+
+  componentDidMount () {
+    global.duoshuoQuery = {short_name: 'xiaohuoziapp'}
+    const ds = document.createElement('script')
+    ds.type = 'text/javascript'
+    ds.setAttribute('id', 'dsscript')
+    ds.async = true
+    ds.src = (document.location.protocol === 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js'
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds)
+  }
+
+  componentWillUnmount () {
+    const script = document.getElementById('dsscript')
+    script.parentNode.removeChild(script)
   }
 
   render () {
@@ -122,7 +140,9 @@ export default class Index extends Component {
               ).join('\n\n')}
             </Pre>
           </Block>
-          <Block title='评论'></Block>
+          <Block title='评论'>
+            <div className='ds-thread' data-thread-key={application._id} data-title={application.name} data-url={`${BACKEND_URL}/applications/${application._id}`} />
+          </Block>
         </div>
       </Page>
     )
